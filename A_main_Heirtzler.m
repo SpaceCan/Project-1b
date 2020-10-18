@@ -1,6 +1,6 @@
 %% MATLAB House-keeping, variable definitions
 clear all;clc
-addpath('..\Thermal_Systems_Project_1\ThermoTablesCoolProp_v6_1_0')
+addpath('..\Project-1b\ThermoTablesCoolProp_v6_1_0')
 
 substance = 'R410a';
 %The number of steps between curved sections of the cycle
@@ -128,7 +128,7 @@ T_h = linspace(15,20,20);
 [T_L,T_H] = meshgrid(T_l,T_h);
 
 %Input T_L and T_H matrices into COP function to get COP matrix
-[COP] = COP(T_H,T_L,deltaT,substance);
+[COP] = COP(T_H,T_L,deltaT,substance,'heat pump');
 
 %COP Plot
 figure
