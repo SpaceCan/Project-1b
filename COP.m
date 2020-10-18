@@ -1,4 +1,4 @@
-function [cop] = COP(T_H,T_L,deltaT,substance)
+function [cop] = COP(T_H,T_L,deltaT,substance,type)
 %Finds COP for the vapour compression cycle given matrices T_H and T_L
 
 Q1 = 0;
@@ -21,10 +21,17 @@ for i = 1:size(T1,1)
         
         h3 = CoolProp.PropsSI('H', 'T', T3(i,j), 'Q', Q1, substance);
         
-        q_h = (h2 - h3);
-        w = (h2 - h1);
+        h4 = h3;
         
-        cop(i,j) = q_h/w;
+        q_h = (h2 - h3);
+        q_l = (h1 - h4);
+        w = (h2 - h1);
+        switch type
+            case 'refrigeration'
+                cop(i,j) = q_l/w;
+            case 'heat pump'
+                cop(i,j) = q_h/w;
+        end
     end
 end
 end
