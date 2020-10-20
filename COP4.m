@@ -1,6 +1,7 @@
 function [cop] = COP4(T_H,T_L,deltaT,substances)
 %Finds COP for the vapour compression cycle given matrices T_H and T_L
-
+%the heat pump COP, had to make this function file to get it to work for
+%last two refrigerants in winter script
 Q1 = 0;
 Q2 = 1;
 %Calculating T1 and T3

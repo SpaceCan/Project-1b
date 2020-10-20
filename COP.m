@@ -1,5 +1,6 @@
 function [cop] = COP(T_H,T_L,deltaT,substances)
-%Finds COP for the vapour compression cycle given matrices T_H and T_L
+%Finds COP for the vapour compression cycle given matrices T_H and T_L for
+%the heat pump COP
 
 Q1 = 0;
 Q2 = 1;

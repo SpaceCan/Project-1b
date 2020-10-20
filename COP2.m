@@ -1,6 +1,6 @@
 function [cop] = COP2(T_H,T_L,deltaT,substances)
 %Finds COP for the vapour compression cycle given matrices T_H and T_L
-
+%for the AC COP
 Q1 = 0;
 Q2 = 1;
 %Calculating T1 and T3
