@@ -39,10 +39,10 @@ for i = 1:length(T2a_2b)
     s2a_2b(i) = CoolProp.PropsSI('S','T',T2a_2b(i),'P',P3,substance);
 end
 
-qL = h1-h4;
-qH = h2a-h3;
-w = h2a-h1;
-COP = qH/w;
+% qL = h1-h4;
+% qH = h2a-h3;
+% w = h2a-h1;
+% COP = qH/w;
 
 T = [T1,T2a_2b,T3_4,T1];
 s = [s1,s2a_2b,s3_4,s1];
