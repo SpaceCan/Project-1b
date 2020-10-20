@@ -1,7 +1,7 @@
 %refrigerants summer scenario
 
 clear all;clc
-addpath('..\Thermal_Systems_Project_1\ThermoTablesCoolProp_v6_1_0')
+addpath('..\Project-1b\ThermoTablesCoolProp_v6_1_0')
 
 substances = {'R717','R410a','R407C'};
 %The number of steps between curved sections of the cycle

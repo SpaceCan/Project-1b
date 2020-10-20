@@ -1,7 +1,7 @@
 %refrigerants winter scenario
 
 clear all;clc
-addpath('..\Thermal_Systems_Project_1\ThermoTablesCoolProp_v6_1_0')
+addpath('..\Project-1b\ThermoTablesCoolProp_v6_1_0')
 
 substances = {'R717','R410a','R407C'};
 %The number of steps between curved sections of the cycle
@@ -19,7 +19,7 @@ T_h = linspace(15,20,20);
 [T_L,T_H] = meshgrid(T_l,T_h);
 
 %Input T_L and T_H matrices into COP function to get COP matrix
-[COP] = COP(T_H,T_L,deltaT,substances{1});
+[COP] = COP1(T_H,T_L,deltaT,substances{1});
 [COP2] = COP4(T_H,T_L,deltaT,substances{2});
 [COP3] = COP4(T_H,T_L,deltaT,substances{3});
 %COP Plot
