@@ -1,4 +1,4 @@
-function [cop] = COP(T_H,T_L,deltaT,substance)
+function [cop] = COP(T_H,T_L,deltaT,substances)
 %Finds COP for the vapour compression cycle given matrices T_H and T_L
 
 Q1 = 0;
@@ -12,14 +12,16 @@ cop = zeros(size(T1,1),size(T1,2));
 
 for i = 1:size(T1,1)
     for j = 1:size(T1,2)
-        s1 = CoolProp.PropsSI('S', 'T', T1(i,j), 'Q', Q2, substance);
-        h1 = CoolProp.PropsSI('H', 'T', T1(i,j), 'Q', Q2, substance);
+        s1 = CoolProp.PropsSI('S', 'T', T1(i,j), 'Q', Q2, substances);
+        h1 = CoolProp.PropsSI('H', 'T', T1(i,j), 'Q', Q2, substances);
         
-        P2 = CoolProp.PropsSI('P', 'T', T3(i,j), 'Q', Q1, substance);
-        T2 = CoolProp.PropsSI('T', 'S', s1, 'P', P2, substance);
-        h2 = CoolProp.PropsSI('H', 'T', T2, 'S', s1, substance);
+        P2 = CoolProp.PropsSI('P', 'T', T3(i,j), 'Q', Q1, substances);
+        T2 = CoolProp.PropsSI('T', 'S', s1, 'P', P2, substances);
+        h2 = CoolProp.PropsSI('H', 'T', T2, 'S', s1, substances);
         
-        h3 = CoolProp.PropsSI('H', 'T', T3(i,j), 'Q', Q1, substance);
+        h3 = CoolProp.PropsSI('H', 'T', T3(i,j), 'Q', Q1, substances);
+        
+        h4 = h3;
         
         q_h = (h2 - h3);
         w = (h2 - h1);
