@@ -75,8 +75,8 @@ end
 % converting the variables to hourly values
 % indexArray = 1:length(tempC);
 % hourIndices = mod(indexArray,60) ~= 1;
-% tempC(hourIndices) = [];
-% timestamp(hourIndices) = [];
+%tempC(hourIndices) = [];
+timestamp(hourIndices) = [];
 
 save('weather_2019','timestamp','tempC')
 %% PLOT TEST
