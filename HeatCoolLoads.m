@@ -23,10 +23,13 @@ end
 
 QCond = ((wallArea *(-(tempOutside - tempInside)))/(wallResistance))...
 + ((windowArea *(-(tempOutside - tempInside)))/(windowResistance));
+% Heat transfer lost through the walls/windows
 
 QVentilation = (massFlowrate*(hAir_in - hAir_out));
+% Heat transfer from change in temperature of outside and inside air
 
 QPeople = (QHuman * 45*ones(1,length(time)));
+% Heat transfer from occupants inside the room
 
 figure
 hold on
