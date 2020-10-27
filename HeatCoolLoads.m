@@ -1,16 +1,19 @@
-load('weather_2019.mat')
+function [QCond, QVentilation, QPeople, QSum, QNeeded] = HeatCoolLoads(massFlowrate,wallResistance,windowResistance,QHuman,file)
+%Calculates Heat transfer values over a specified time period
+
+load(file, 'tempC', 'timestamp')
 addpath('..\Project-1b\ThermoTablesCoolProp_v6_1_0')
 
 time = datetime(timestamp,'convertfrom','posixtime');
 
 substance = 'Air';
 wallArea = 81.59471;
-wallResistance = 5.914;
+%wallResistance = 5.914;
 windowArea = 30.28696;
-windowResistance = 0.1905;
-massFlowrate = 0.248;
+%windowResistance = 0.1905;
+%massFlowrate = 0.248;
 Patm = 101325;
-QHuman = 100;
+%QHuman = 100;
 
 tempOutside = tempC;
 
@@ -42,16 +45,9 @@ QVentilation = (massFlowrate*(hAir_in - hAir_out));
 QPeople = (QHuman * numPeople);
 % Heat transfer from occupants inside the room
 
-figure
-hold on
-plot(time,QVentilation)
-plot(time,QCond)
-plot(time,QPeople)
+QSum = QVentilation+QCond+QPeople;
 
-plot(time, QVentilation+QCond+QPeople)
-
-
-
+QNeeded = -QSum;
 
 
 %hcW = 12.12 - 1.16*v + 11.6 v1/2; %convection heat transfer formula I found on piazza
@@ -63,3 +59,4 @@ plot(time, QVentilation+QCond+QPeople)
 % r = (1/Rswa)+(1/Rswi);
 % 
 % Rp = (TL2 - TL1)/(r);%Use this formula to combine the thermal resistances for the walls in parallel
+end

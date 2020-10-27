@@ -1,4 +1,6 @@
-load('weather_2019_winter.mat')
+function [QCond, QVentilation, QPeople, QSum, QNeeded] = HeatCoolLoads()
+
+load('weather_2019.mat', 'tempC', 'timestamp')
 addpath('..\Project-1b\ThermoTablesCoolProp_v6_1_0')
 
 time = datetime(timestamp,'convertfrom','posixtime');
@@ -12,12 +14,12 @@ massFlowrate = 0.248;
 Patm = 101325;
 QHuman = 100;
 
-tempInside = 20;
 tempOutside = tempC;
 
 hAir_in = zeros(1,length(time));
 hAir_out = zeros(1,length(time));
 numPeople = zeros(1,length(time));
+tempInside = zeros(1,length(time));
 
 for i = 1:length(tempOutside)
     if hour(time(i)) >= 10 && hour(time(i)) <= 14
@@ -25,7 +27,7 @@ for i = 1:length(tempOutside)
         tempInside(i) = 20;
     else
         numPeople(i) = 0;
-        tempInside(i) = floor(tempOut;
+        tempInside(i) = min(max(tempOutside(i), 10),24);
     end
     hAir_in(i) = CoolProp.PropsSI('H','P',Patm,'T',tempOutside(i)+273.15,substance);
     hAir_out(i) = CoolProp.PropsSI('H','P',Patm,'T',tempInside(i)+273.15,substance);
@@ -41,6 +43,11 @@ QVentilation = (massFlowrate*(hAir_in - hAir_out));
 
 QPeople = (QHuman * numPeople);
 % Heat transfer from occupants inside the room
+
+QSum = QVentilation+QCond+QPeople;
+
+QNeeded = -QSum;
+
 
 figure
 hold on
@@ -63,3 +70,4 @@ plot(time, QVentilation+QCond+QPeople)
 % r = (1/Rswa)+(1/Rswi);
 % 
 % Rp = (TL2 - TL1)/(r);%Use this formula to combine the thermal resistances for the walls in parallel
+end
