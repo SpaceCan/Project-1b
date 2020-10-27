@@ -12,12 +12,23 @@ massFlowrate = 0.248;
 Patm = 101325;
 QHuman = 100;
 
-tempInside = 20;
 tempOutside = tempC;
 
+hAir_in = zeros(1,length(time));
+hAir_out = zeros(1,length(time));
+numPeople = zeros(1,length(time));
+tempInside = zeros(1,length(time));
+
 for i = 1:length(tempOutside)
+    if hour(time(i)) >= 10 && hour(time(i)) <= 14
+        numPeople(i) = 45;
+        tempInside(i) = 20;
+    else
+        numPeople(i) = 0;
+        tempInside(i) = min(max(tempOutside(i), 10),24);
+    end
     hAir_in(i) = CoolProp.PropsSI('H','P',Patm,'T',tempOutside(i)+273.15,substance);
-    hAir_out(i) = CoolProp.PropsSI('H','P',Patm,'T',tempInside+273.15,substance);
+    hAir_out(i) = CoolProp.PropsSI('H','P',Patm,'T',tempInside(i)+273.15,substance);
 end
 
 
@@ -28,7 +39,7 @@ QCond = ((wallArea *(-(tempOutside - tempInside)))/(wallResistance))...
 QVentilation = (massFlowrate*(hAir_in - hAir_out));
 % Heat transfer from change in temperature of outside and inside air
 
-QPeople = (QHuman * 45*ones(1,length(time)));
+QPeople = (QHuman * numPeople);
 % Heat transfer from occupants inside the room
 
 figure
