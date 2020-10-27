@@ -1,19 +1,38 @@
 load('weather_2019.mat')
+addpath('..\Project-1b\ThermoTablesCoolProp_v6_1_0')
 
 time = datetime(timestamp,'convertfrom','posixtime');
 
+substance = 'Air';
 wallArea = 81.59471;
 wallResistance = 5.914;
 windowArea = 30.28696;
 windowResistance = 0.1905;
+massFlowrate = 0.248;
+Patm = 101325;
+QHuman = 100;
 
 tempInside = 20;
 tempOutside = tempC;
 
+for i = 1:length(tempOutside)
+    hAir_in(i) = CoolProp.PropsSI('H','P',Patm,'T',tempOutside(i)+273.15,substance);
+    hAir_out(i) = CoolProp.PropsSI('H','P',Patm,'T',tempInside+273.15,substance);
+end
+
+
 QCond = ((wallArea *(-(tempOutside - tempInside)))/(wallResistance))...
 + ((windowArea *(-(tempOutside - tempInside)))/(windowResistance));
 
+QVentilation = (massFlowrate*(hAir_in - hAir_out));
+
+QPeople = (QHuman * 45*ones(1,length(time)));
+
+figure
+hold on
+plot(time,QVentilation)
 plot(time,QCond)
+plot(time,QPeople)
 
 
 
