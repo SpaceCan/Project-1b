@@ -34,7 +34,7 @@ plot(time,QVentilation)
 plot(time,QCond)
 plot(time,QPeople)
 
-
+plot(time, QVentilation+QCond+QPeople)
 
 
 
