@@ -23,38 +23,19 @@ T_h = linspace(15,20,20);
 [COP2] = COP4(T_H,T_L,deltaT,substances{2});
 [COP3] = COP4(T_H,T_L,deltaT,substances{3});
 %COP Plot
+
+COPcase1 = COP(1,:);
+COPcase2 = COP2(1,:);
+COPcase3 = COP3(1,:); 
+
 figure(1)
-%Create contour plot from T_H, T_L, and COP matrices
-contour(T_L, T_H, COP, min(COP,[],'all'):max(COP,[],'all'), 'Fill', 'on', 'LineColor', 'black')
-
+plot(T_l,COPcase1)
+hold on
+plot(T_l,COPcase2)
+plot(T_l,COPcase3)
 %formatting
-title(sprintf('Coefficient of Performance for Ammonia'));
-ylabel(sprintf('T_H (\x2103)'))
-xlabel(sprintf('T_L (\x2103)'))
-colormap winter
-c=colorbar;
-c.Label.String = 'COP';
-
-figure(2)
-%Create contour plot from T_H, T_L, and COP matrices
-contour(T_L, T_H, COP2, min(COP2,[],'all'):max(COP2,[],'all'), 'Fill', 'on', 'LineColor', 'black')
-
 %formatting
-title(sprintf('Coefficient of Performance for R410a'));
-ylabel(sprintf('T_H (\x2103)'))
-xlabel(sprintf('T_L (\x2103)'))
-colormap winter
-c=colorbar;
-c.Label.String = 'COP';
-
-figure(3)
-%Create contour plot from T_H, T_L, and COP matrices
-contour(T_L, T_H, COP3, min(COP3,[],'all'):max(COP3,[],'all'), 'Fill', 'on', 'LineColor', 'black')
-
-%formatting
-title(sprintf('Coefficient of Performance for R410a'));
-ylabel(sprintf('T_H (\x2103)'))
-xlabel(sprintf('T_L (\x2103)'))
-colormap winter
-c=colorbar;
-c.Label.String = 'COP';
+title(sprintf('Heat Pump Coefficients of Performance for Refirgerants'));
+ylabel(sprintf('COP'))
+xlabel(sprintf('Outside Temperature (Celcius)'))
+legend('Ammonia','R-410a','R407C')
