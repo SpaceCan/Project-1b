@@ -1,4 +1,4 @@
-function [QConduction, QVentilation, QPeople, QSum, QNeeded] = HeatCoolLoads(massFlowrate,wallResistance,windowResistance,QHuman,file)
+function [QConduction, QVentilation, QPeople, QSum, QNeeded, heatMode, time] = HeatCoolLoads(massFlowrate,wallResistance,windowResistance,QHuman,file)
 %Calculates Heat transfer values over a specified time period
 
 load(file, 'tempC', 'timestamp')
@@ -8,7 +8,7 @@ time = datetime(timestamp,'convertfrom','posixtime');
 
 substance = 'Air';
 wallArea = 81.59471;
-%wallResistance = 5.914;
+%wallResistance = 5.205;
 windowArea = 30.28696;
 %windowResistance = 0.1905;
 %massFlowrate = 0.248;
@@ -34,6 +34,10 @@ for i = 1:length(tempOutside)
     hAir_out(i) = CoolProp.PropsSI('H','P',Patm,'T',tempInside(i)+273.15,substance);
 end
 
+heatMode = tempOutside > tempInside;
+hAir_inTEMP = hAir_in;
+hAir_in(heatMode) = hAir_out(heatMode);
+hAir_out(heatMode) = hAir_inTEMP(heatMode);
 
 QConduction = ((wallArea *(-(tempOutside - tempInside)))/(wallResistance))...
 + ((windowArea *(-(tempOutside - tempInside)))/(windowResistance));
