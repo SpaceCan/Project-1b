@@ -12,3 +12,4 @@ for i = 1:length(tempC)
 end
 PL = 200000;
 PH = 1000000;
+% massflowrate = 0.248;

@@ -52,6 +52,7 @@ TH = T2a;
 
 % Will need code added to calculate the COP for heating and cooling modes
 
+
 end
 
 
