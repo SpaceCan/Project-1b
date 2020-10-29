@@ -63,8 +63,8 @@ figure
 hold on
 plot(tempC,PowerNeeded)
 title('Power Consumption vs Outside Air Temperature')
-xlabel('Outside Air Temperature')
-ylabel('Power Consumption')
+xlabel('Outside Air Temperature    (C)')
+ylabel('Power Consumption    (kW)')
 
 figure
 hold on
@@ -72,7 +72,7 @@ plot([sliq,flip(svap)],[T,flip(T)],'Color', '#00ADEF', 'LineWidth', 2)
 plot(s_C,T_C)
 title('T-s Diagram')
 xlabel('Specific Entropy (J/(kg*k))')
-ylabel('Temperature   (K)')
+ylabel('Temperature   (C)')
 
 figure
 hold on
