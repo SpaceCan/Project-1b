@@ -1,4 +1,4 @@
-function [QCond, QVentilation, QPeople, QSum, QNeeded, heatMode, time] = HeatCoolLoads(massFlowrate,wallResistance,windowResistance,QHuman,file)
+function [QConduction,QVentilation,QPeople,QSum,QNeeded,tempInside,time] = HeatCoolLoads(massFlowrate,wallResistance,windowResistance,QHuman,file)
 %Calculates Heat transfer values over a specified time period
 
 load(file, 'tempC', 'timestamp')
@@ -39,17 +39,17 @@ hAir_inTEMP = hAir_in;
 hAir_in(heatMode) = hAir_out(heatMode);
 hAir_out(heatMode) = hAir_inTEMP(heatMode);
 
-QCond = ((wallArea *(-(tempOutside - tempInside)))/(wallResistance))...
-+ ((windowArea *(-(tempOutside - tempInside)))/(windowResistance));
+QConduction = -((wallArea *(-(tempOutside - tempInside)))/(wallResistance))...
+- ((windowArea *(-(tempOutside - tempInside)))/(windowResistance));
 % Heat transfer lost through the walls/windows
 
-QVentilation = (massFlowrate*(hAir_in - hAir_out));
+QVentilation = -(massFlowrate*(hAir_in - hAir_out));
 % Heat transfer from change in temperature of outside and inside air
 
 QPeople = (QHuman * numPeople);
 % Heat transfer from occupants inside the room
 
-QSum = QVentilation+QCond+QPeople;
+QSum = QVentilation+QConduction+QPeople;
 
 QNeeded = -QSum;
 

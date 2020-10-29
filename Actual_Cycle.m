@@ -24,7 +24,7 @@ T3b = CoolProp.PropsSI('T','P',P3,'Q',Q1,substance);
 s3b = CoolProp.PropsSI('S','P',P3,'Q',Q1,substance);
 % State 4
 s4 = CoolProp.PropsSI('S','P',P4,'Q',Q4,substance);
-h4 = CoolProp,PropsSI('H','P',P4,'Q',Q4,substance);
+h4 = CoolProp.PropsSI('H','P',P4,'Q',Q4,substance);
 % State 5
 P5 = P4;
 T5 = T4-2;
