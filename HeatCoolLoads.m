@@ -1,4 +1,4 @@
-function [QConduction, QVentilation, QPeople, QSum, QNeeded, time] = HeatCoolLoads(massFlowrate,wallResistance,windowResistance,QHuman,file)
+function [QConduction,QVentilation,QPeople,QSum,QNeeded,tempInside,time] = HeatCoolLoads(massFlowrate,wallResistance,windowResistance,QHuman,file)
 %Calculates Heat transfer values over a specified time period
 
 load(file, 'tempC', 'timestamp')
