@@ -1,5 +1,6 @@
 %% MATLAB House-keeping, variable definitions
 clear all;clc
+cd ../
 addpath('..\Project-1b\ThermoTablesCoolProp_v6_1_0')
 
 substance = 'R410a';
