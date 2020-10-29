@@ -7,7 +7,7 @@ Q2 = 1;
 T1 = T_L - deltaT + 273.15;
 T3 = T_H + deltaT + 273.15;
 
-%Creates a matrix the same size as T1
+%Creates a array the same size as T1
 cop = zeros(size(T1,1),size(T1,2));
 
 for i = 1:size(T1,1)
