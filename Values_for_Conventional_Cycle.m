@@ -14,19 +14,20 @@ windowResistance = 0.1905;
 massFlowrate = 0.248;
 Patm = 101325;
 QHuman = 100;
-[QConduction, QVentilation, QPeople, QSum, QNeeded, time] = HeatCoolLoads(massFlowrate,wallResistance,windowResistance,QHuman,file);
+[QConduction,QVentilation,QPeople,QSum,QNeeded,tempInside,time] = HeatCoolLoads(massFlowrate,wallResistance,windowResistance,QHuman,file);
 % called 'HeatCoolLoads' function to find relevent Q terms
 substance = 'R410a';
-TLow = min(tempC);
+deltaT = 2;
+TLow = min(tempC)-deltaT;
 disp(TLow);
-THigh = max(tempC);
+THigh = max(tempC)+deltaT;
 disp(THigh);
 PLow = CoolProp.PropsSI('P','T',TLow+273.15,'Q',1,substance);
 %sLow = CoolProp.PropsSI('S','T',TLow,'Q',1.0,substance);
 PHigh = CoolProp.PropsSI('P','T',THigh+273.15,'Q',0,substance);
-[T_C,s_C,P_C,h_C,massFlowrate2] = Conventional_Cycle(PLow,PHigh,QNeeded,substance,file);
 % called 'Coventional_Cycle' function to find mdot for R-410a and power for
 % heat pump
+[T_C,s_C,P_C,h_C,QCooling,QHeating,massFlowrate2,PowerHP,COPcooling,COPheating] = Conventional_Cycle(PLow,PHigh,QNeeded,tempInside,substance,file);
 
 % P-v vapor dome
 steps = 100;
@@ -49,14 +50,35 @@ end
 %converting the vapour dome temperature to celcius
 T = T-273.15;
 
+if tempC < tempInside
+  Qhp = QHeating;
+  COP = COPheating;
+else
+  Qhp = QCooling;
+  COP = COPcooling;
+end
+PowerNeeded = ((QNeeded./Qhp)* PowerHP)./1000;
+
+figure
+hold on
+plot(tempC,PowerNeeded)
+title('Power Consumption vs Outside Air Temperature')
+xlabel('Outside Air Temperature')
+ylabel('Power Consumption')
+
 figure
 hold on
 plot([sliq,flip(svap)],[T,flip(T)],'Color', '#00ADEF', 'LineWidth', 2)
 plot(s_C,T_C)
 title('T-s Diagram')
+xlabel('Specific Entropy (J/(kg*k))')
+ylabel('Temperature   (K)')
 
 figure
 hold on
 plot([hliq,flip(hvap)],[P,flip(P)], 'Color', '#00ADEF', 'LineWidth', 2)
 plot(h_C,P_C)
 title('P-h Diagram')
+xlabel('Specific Enthalpy   (kJ/kg)')
+ylabel('Pressure   (kPa)')
+
