@@ -2,7 +2,7 @@ function [T,s,P,h] = Actual_Cycle(T1,T4,substance)
 Q1 = 1;
 Q4 = 0;
 cond_eff = 0.75;
-P4 = CoolProp.PropsSI('P','T',T4,'Q',Q3);
+P4 = CoolProp.PropsSI('P','T',T4,'Q',Q4,substance);
 P1 = CoolProp.PropsSI('P','T',T1,'Q',Q1,substance);
 % State 1
 s1 = CoolProp.PropsSI('S','T',T1,'Q',Q1,substance);
@@ -29,7 +29,7 @@ h4 = CoolProp.PropsSI('H','P',P4,'Q',Q4,substance);
 P5 = P4;
 T5 = T4-2;
 s5 = CoolProp.PropsSI('S','T',T5,'P',P5,substance);
-h5 = CoolProp.PropsSi('H','T',T5,'P',P5,substance);
+h5 = CoolProp.PropsSI('H','T',T5,'P',P5,substance);
 % State 6
 P6 = P1+80000;
 h6 = h5;
@@ -41,16 +41,14 @@ T3_3b = linspace(T3,T3b,100);
 for i = 1:length(T3_3b)
     s3_3b(i) = CoolProp.PropsSI('S','T',T3_3b(i),'P',P3,substance);
 end
-% State 5-6
-T5_6 = linspace(T5,T6,100);
-for i = 1:length(T5_6)
-    s5_6(i) = CoolProp.PropsSI('S','T',T5_6(i),'H',h6,substance);
+
+T = [T1,T2,T3_3b,T4,T5,T6,T1];
+s = [s1,s2,s3_3b,s4,s5,s6,s1];
+P = [P1,P2,P3,P4,P5,P6,P1];
+h = [h1,h2,h3,h4,h5,h6,h1];
+
 end
 
-T = [T1,T2,T3_3b,T4,T5_6,T1];
-s = [s1,s2,s3_3b,s4,s5_6,s1];
-P = [P1,P2,P3,P4,P5,P6];
-h = [h1,h2,h3,h4,h5,h6,h1];
 
 
 
