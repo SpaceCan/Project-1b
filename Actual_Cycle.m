@@ -2,9 +2,9 @@ function [T,s,P,h] = Actual_Cycle(tempOutside,tempInside,substance)
 
 if tempOutside < tempInside
     T1 = tempOutside - deltaT + 273.15;
-    T3 = tempInside + deltaT + 273.15;
+    T4 = tempInside + deltaT + 273.15;
 else
-    T3 = tempOutside - deltaT + 273.15;
+    T4 = tempOutside - deltaT + 273.15;
     T1 = tempInside + deltaT + 273.15;
 end
 
