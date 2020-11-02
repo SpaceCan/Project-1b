@@ -25,9 +25,24 @@ ylabel(sprintf('Temperature (\x2103)'))
 %% Heating and Cooling loads Plots
 % Contour plot of heating and cooling loads vs. Inside and outside
 % temperature
+wallResistance = 5.205;
+windowResistance = 0.1905;
+airMassFlowrate = 0.248;
+QHuman = 100;
+tempOutside = linspace(min(tempC),max(tempC),100);
 
-
-
+[QConduction,QVentilation,QPeople,QSum,~]...
+    = HeatCoolLoadsOutsideTemp(tempOutside,airMassFlowrate,wallResistance,windowResistance,QHuman);
+figure
+hold on
+plot(tempOutside, QSum./10^3,'LineWidth', 2, 'DisplayName','QSum');
+plot(tempOutside, QConduction./10^3,'LineWidth', 2, 'DisplayName','QConduction');
+plot(tempOutside, QVentilation./10^3,'LineWidth', 2, 'DisplayName','QVentilation');
+plot(tempOutside, QPeople.*ones(size(QSum))./10^3,'LineWidth', 2, 'DisplayName','QPeople');
+title('Heating & Cooling Loads vs Outside Air Temperature')
+xlabel(sprintf('Outside Air Temperature (\x2103)'))
+ylabel('Heat Transfer (kW)')
+legend('Location','SouthEast')
 
 %% Plotting and values for refrigerant selection
 % Spencer's code for showing different refrigerant COPs
@@ -60,7 +75,7 @@ plot(T_l,COP_R407C)
 %formatting
 title(sprintf('Heat Pump COPs for Refrigerants'));
 ylabel(sprintf('COP'))
-xlabel(sprintf('Outside Temperature (Celcius)'))
+xlabel(sprintf('Outside Air Temperature (\x2103)'))
 legend('Ammonia','R-410a','R407C')
 
 
@@ -86,39 +101,55 @@ plot(T_h,COP_R407C)
 %formatting
 title(sprintf('AC COPs for Refrigerants'));
 ylabel(sprintf('COP'))
-xlabel(sprintf('Outside Temperature (Celcius)'))
+xlabel(sprintf('Outside Air Temperature (\x2103)'))
 legend('Ammonia','R-410a','R407C')
 
 
-%% Plotting and Values for Conventional Cycle
+%% Plotting and Values for Conventional System Model
 
 % Code for finding PL and PH using TL and TH
-substance = 'Air';
 wallArea = 81.59471;
 wallResistance = 5.205;
 windowArea = 30.28696;
 windowResistance = 0.1905;
-massFlowrate = 0.248;
+airMassFlowrate = 0.248;
 Patm = 101325;
 QHuman = 100;
-
-[QConduction,QVentilation,QPeople,QSum,QNeeded,tempInside,time]...
-    = HeatCoolLoads(massFlowrate,wallResistance,windowResistance,QHuman,file);
-
-% called 'HeatCoolLoads' function to find relevent Q terms
 substance = 'R410a';
+tempOutside = linspace(min(tempC),max(tempC),100);
+
 deltaT = 2;
 TLow = min(tempC)-deltaT;
-disp(TLow);
 THigh = max(tempC)+deltaT;
-disp(THigh);
 PLow = CoolProp.PropsSI('P','T',TLow+273.15,'Q',1,substance);
-%sLow = CoolProp.PropsSI('S','T',TLow,'Q',1.0,substance);
 PHigh = CoolProp.PropsSI('P','T',THigh+273.15,'Q',0,substance);
+
+%Plotting COP
+
+
+
+
+
+
+
+
+
+
+[QConduction,QVentilation,QPeople,QSum,QNeeded]...
+    = HeatCoolLoadsOutsideTemp(tempOutside,tempInside,airMassFlowrate,wallResistance,windowResistance,QHuman);
+% called 'HeatCoolLoadsOutsideTemp' function to find relevent Q terms
+
+[T_C,s_C,P_C,h_C,QCooling,QHeating,massFlowrate2,PowerHP,COPcooling,COPheating]...
+    = Conventional_Cycle(PLow,PHigh,QNeeded,substance);
 % called 'Coventional_Cycle' function to find mdot for R-410a and power for
 % heat pump
-[T_C,s_C,P_C,h_C,QCooling,QHeating,massFlowrate2,PowerHP,COPcooling,COPheating]...
-    = Conventional_Cycle(PLow,PHigh,QNeeded,tempInside,substance,file);
+
+heatMode = QNeeded > 0;
+Qhp = ones(size(QNeeded)).*QCooling;
+Qhp(heatMode) = QHeating;
+COP = ones(size(QNeeded)).*COPcooling;
+COP(heatMode) = COPheating;
+
 
 % P-v vapor dome
 steps = 100;
@@ -141,40 +172,39 @@ end
 %converting the vapour dome temperature to celcius
 T = T-273.15;
 
-if tempC < tempInside
-  Qhp = QHeating;
-  COP = COPheating;
-else
-  Qhp = QCooling;
-  COP = COPcooling;
-end
-PowerNeeded = ((QNeeded./Qhp)* PowerHP)./1000;
-
+PowerNeeded = ((QNeeded./Qhp).* PowerHP)./1000;
+%Plot power usage
 figure
 hold on
-plot(tempC,PowerNeeded)
+plot(tempOutside,PowerNeeded,'Color', '#e6b800', 'LineWidth', 2,...
+'DisplayName','20')
 title('Power Consumption vs Outside Air Temperature')
-xlabel('Outside Air Temperature    (C)')
+xlabel(sprintf('Outside Air Temperature (\x2103)'))
 ylabel('Power Consumption    (kW)')
+lgd = legend('Location','SouthEast');
+title(lgd,'Inside Temperature')
 
+
+%Plot T-s diagram
 figure
 hold on
 plot([sliq,flip(svap)],[T,flip(T)],'Color', '#00ADEF', 'LineWidth', 2)
-plot(s_C,T_C)
+plot(s_C,T_C, 'Color', '#fe5f55', 'LineWidth', 1.5)
 title('T-s Diagram')
-xlabel('Specific Entropy (J/(kg*k))')
-ylabel('Temperature   (C)')
+xlabel('Specific Entropy (kJ/(kg*k))')
+ylabel(sprintf('Temperature (\x2103)'))
 
+%Plot P-h diagram
 figure
 hold on
 plot([hliq,flip(hvap)],[P,flip(P)], 'Color', '#00ADEF', 'LineWidth', 2)
-plot(h_C,P_C)
+plot(h_C,P_C, 'Color', '#577399', 'LineWidth', 1.5)
 title('P-h Diagram')
 xlabel('Specific Enthalpy   (kJ/kg)')
 ylabel('Pressure   (kPa)')
 
 
-%% Plotting and Values for Newer System
+%% Plotting and Values for Newer System Model
 
 
 
