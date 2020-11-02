@@ -32,7 +32,7 @@ QHuman = 100;
 tempOutside = linspace(min(tempC),max(tempC),100);
 
 [QConduction,QVentilation,QPeople,QSum,~]...
-    = HeatCoolLoadsOutsideTemp(tempOutside,0,airMassFlowrate,wallResistance,windowResistance,QHuman);
+    = HeatCoolLoadsOutsideTemp(tempOutside,20,0,airMassFlowrate,wallResistance,windowResistance,QHuman);
 figure
 hold on
 plot(tempOutside, QSum./10^3,'LineWidth', 2, 'DisplayName','QSum');
@@ -108,7 +108,7 @@ PLow = CoolProp.PropsSI('P','T',TLow+273.15,'Q',1,substance);
 PHigh = CoolProp.PropsSI('P','T',THigh+273.15,'Q',0,substance);
 
 [QConduction,QVentilation,QPeople,QSum,QNeeded]...
-    = HeatCoolLoadsOutsideTemp(tempOutside,0,airMassFlowrate,wallResistance,windowResistance,QHuman);
+    = HeatCoolLoadsOutsideTemp(tempOutside,20,0,airMassFlowrate,wallResistance,windowResistance,QHuman);
 % called 'HeatCoolLoadsOutsideTemp' function to find relevent Q terms
 
 [T_C,s_C,P_C,h_C,QCooling,QHeating,massFlowrate2,PowerHP,COPcooling,COPheating]...

@@ -5,7 +5,7 @@ function [PowerDelta]...
 %multiple inside temperatures to find COP
 
 [~,~,~,~,QNeeded]...
-    = HeatCoolLoadsOutsideTemp(tempOutside,tempInsideDelta,airMassFlowrate,wallResistance,windowResistance,QHuman);
+    = HeatCoolLoadsOutsideTemp(tempOutside,20,tempInsideDelta,airMassFlowrate,wallResistance,windowResistance,QHuman);
 Q1 = 1;
 Q3 = 0;
 
