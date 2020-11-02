@@ -22,7 +22,7 @@ h1 = CoolProp.PropsSI('H', 'T', T1, 'Q', Q1, substance);
 % State 2  
 s2a = s1;
 P2 = CoolProp.PropsSI('P', 'T', T3, 'Q', Q1, substance);
-T2 = CoolProp.PropsSI('T', 'S', s2a, 'P', P2, substance);
+T2a = CoolProp.PropsSI('T', 'S', s2a, 'P', P2, substance);
 h2 = CoolProp.PropsSI('H', 'T', T2, 'S', s2a, substance);
 s2b = CoolProp.PropsSI('S', 'P', P2, 'Q', Q1, substance);
 T2b = CoolProp.PropsSI('T', 'P', P2, 'Q', Q1, substance);
@@ -45,4 +45,10 @@ w = (h2 - h1);
 %             case 'heat pump'
 %                 cop(i,j) = q_h/w;
 %         end
+
+T = [T1,T2a,T2b,T3,T4,T1];
+s = [s1,s2a,s2b,s3,s4,s1];
+P = [P1,P2,P3,P4];
+h = [h1,h2,h3,h4];
+
 end
