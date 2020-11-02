@@ -52,58 +52,41 @@ substances = {'R717','R410a','R407C'};
 %The number of steps between curved sections of the cycle
 steps = 100;
 %Inside temperature
-TH = 20;
+T_Inside = 20;
 
 %Difference between TH and TL, and the cycle temperature
 deltaT = 5;
 
-T_l = linspace(-15,15,steps);
-T_h = TH * ones(1,length(T_l));
+T_l = linspace(-15,T_Inside-((T_Inside+15)/steps),steps);
+T_H = T_Inside * ones(1,steps);
 
 %Input T_l and T_h into COP function to get COP array
-[COP_R717] = COP(T_h,T_l,deltaT,substances{1},'heat pump');
-[COP_R410a] = COP(T_h,T_l,deltaT,substances{2},'heat pump');
-[COP_R407C] = COP(T_h,T_l,deltaT,substances{3},'heat pump');
+[HP_COP_R717] = COP(T_H,T_l,deltaT,substances{1},'heat pump');
+[HP_COP_R410a] = COP(T_H,T_l,deltaT,substances{2},'heat pump');
+[HP_COP_R407C] = COP(T_H,T_l,deltaT,substances{3},'heat pump');
+
+T_h = linspace(T_Inside,35,steps);
+
+[AC_COP_R717] = COP(T_h,T_H,deltaT,substances{1},'refrigeration');
+[AC_COP_R410a] = COP(T_h,T_H,deltaT,substances{2},'refrigeration');
+[AC_COP_R407C] = COP(T_h,T_H,deltaT,substances{3},'refrigeration');
+
+
+
 %COP Plot
 
 figure
 hold on
-plot(T_l,COP_R717)
-plot(T_l,COP_R410a)
-plot(T_l,COP_R407C)
+plot([T_l T_h],[HP_COP_R717 AC_COP_R717], 'LineWidth',2)
+plot([T_l T_h],[HP_COP_R410a AC_COP_R410a], 'LineWidth',2)
+plot([T_l T_h],[HP_COP_R407C AC_COP_R407C], 'LineWidth',2)
 
 %formatting
-title(sprintf('Heat Pump COPs for Refrigerants'));
+title(sprintf('COPs for Refrigerants'));
 ylabel(sprintf('COP'))
 xlabel(sprintf('Outside Air Temperature (\x2103)'))
-legend('Ammonia','R-410a','R407C')
-
-
-%refrigerants summer scenario
-
-%Inside temperature
-TL = 20;
-
-T_h = linspace(25,35,steps);
-T_l = TL * ones(1,length(T_h));
-
-%Input T_L and T_H matrices into COP function to get COP array
-[COP_R717] = COP(T_h,T_l,deltaT,substances{1},'refrigeration');
-[COP_R410a] = COP(T_h,T_l,deltaT,substances{2},'refrigeration');
-[COP_R407C] = COP(T_h,T_l,deltaT,substances{3},'refrigeration');
-
-%COP Plot
-figure
-hold on
-plot(T_h,COP_R717)
-plot(T_h,COP_R410a)
-plot(T_h,COP_R407C)
-%formatting
-title(sprintf('AC COPs for Refrigerants'));
-ylabel(sprintf('COP'))
-xlabel(sprintf('Outside Air Temperature (\x2103)'))
-legend('Ammonia','R-410a','R407C')
-
+lgd = legend('Ammonia','R-410a','R407C','Location','NorthWest');
+title(lgd, 'Refrigerant')
 
 %% Plotting and Values for Conventional System Model
 
