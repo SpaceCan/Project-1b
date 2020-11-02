@@ -1,12 +1,10 @@
 function [T,s,P,h] = Actual_Cycle(tempOutside,tempInside,substance)
 
-if tempOutside < tempInside
-    T1 = tempOutside - deltaT + 273.15;
-    T4 = tempInside + deltaT + 273.15;
-else
-    T4 = tempOutside - deltaT + 273.15;
-    T1 = tempInside + deltaT + 273.15;
-end
+heatMode = tempOutside < tempInside;
+T1 = tempInside + deltaT + 273.15;
+T1(heatMode) = tempOutside - deltaT + 273.15;
+T4 = tempOutside - deltaT + 273.15;
+T4(heatMode) = tempInside + deltaT + 273.15;
 
 Q1 = 1;
 Q4 = 0;
@@ -55,7 +53,7 @@ q_L = h1-h4;
 q_H = h2-h3;
 w = h2-h1;
 
-COP = 
+%COP = 
 
 T = [T1,T2,T3_3b,T4,T5,T6,T1];
 s = [s1,s2,s3_3b,s4,s5,s6,s1];

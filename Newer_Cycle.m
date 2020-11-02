@@ -1,16 +1,14 @@
-function [T,s,P,h,massFlowrate,] = Newer_Cycle(tempOutside,tempInside,deltaT,substance)
+function [T,s,P,h,massFlowrate] = Newer_Cycle(tempOutside,tempInside,deltaT,substance)
 %Finds COP for the vapour compression cycle given matrices T_H and T_L
 
 Q1 = 1;
 Q2 = 0;
 %Calculating T1 and T3
-if tempOutside < tempInside
-    T1 = tempOutside - deltaT + 273.15;
-    T3 = tempInside + deltaT + 273.15;
-else
-    T3 = tempOutside - deltaT + 273.15;
-    T1 = tempInside + deltaT + 273.15;
-end
+heatMode = tempOutside < tempInside;
+T1 = tempInside + deltaT + 273.15;
+T1(heatMode) = tempOutside - deltaT + 273.15;
+T3 = tempOutside - deltaT + 273.15;
+T3(heatMode) = tempInside + deltaT + 273.15;
 
 %Creates a array the same size as T1
 %cop = zeros(size(T1,1),size(T1,2));
