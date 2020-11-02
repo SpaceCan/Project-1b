@@ -7,9 +7,9 @@ Q2 = 0;
 %Calculating T1 and T3
 heatMode = tempOutside < tempInside;
 T1 = tempInside + deltaT + 273.15;
-T1(heatMode) = tempOutside - deltaT + 273.15;
+T1(heatMode) = tempOutside(heatMode) - deltaT + 273.15;
 T3 = tempOutside - deltaT + 273.15;
-T3(heatMode) = tempInside + deltaT + 273.15;
+T3(heatMode) = tempInside(heatMode) + deltaT + 273.15;
 
 %Creates a array the same size as T1
 
@@ -23,7 +23,7 @@ for i = 1:size(tempOutside,1)
         s2a = s1;
         P2 = CoolProp.PropsSI('P', 'T', T3(i,k), 'Q', Q1, substance);
         T2a = CoolProp.PropsSI('T', 'S', s2a, 'P', P2, substance);
-        h2 = CoolProp.PropsSI('H', 'T', T2, 'S', s2a, substance);
+        h2 = CoolProp.PropsSI('H', 'P', P2, 'S', s2a, substance);
         s2b = CoolProp.PropsSI('S', 'P', P2, 'Q', Q1, substance);
         T2b = CoolProp.PropsSI('T', 'P', P2, 'Q', Q1, substance);
         % State 3
@@ -41,11 +41,11 @@ for i = 1:size(tempOutside,1)
         w = (h2 - h1);
         
         if QNeeded(i,k) < 0
-            massFlowrate(i,k) = QNeeded(i,k)./q_l;
-            COP(i,k) = q_l/w;
+            massFlowrate(i,k) = abs(QNeeded(i,k)./q_l);
+            COP(i,k) = min(abs(q_l/w),500);
         else
-            massFlowrate(i,k) = QNeeded(i,k)./q_h;
-            COP(i,k) = q_h/w;
+            massFlowrate(i,k) = abs(QNeeded(i,k)./q_h);
+            COP(i,k) = min(abs(q_h/w),500);
         end
         PConsumption(i,k) = massFlowrate(i,k).*w;
     end

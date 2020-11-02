@@ -139,7 +139,7 @@ figure
 hold on
 for tempInsideDelta = 1:5
     [PowerDelta] = ConventionalCyclePowerSavings...
-        (tempOutside,tempInsideDelta,airMassFlowrate,wallResistance,windowResistance,QHuman,PLow,PHigh,substance,PowerNeeded);
+        (tempOutside,tempInsideDelta,airMassFlowrate,wallResistance,windowResistance,QHuman,PLow,PHigh,substance,PowerNeeded_CC);
     
     plot(tempOutside,PowerDelta,'LineWidth', 2,'DisplayName',...
         sprintf('%d-%d',20-tempInsideDelta,20+tempInsideDelta))
@@ -193,8 +193,33 @@ ylabel('Pressure   (kPa)')
 
 %% Plotting and Values for Newer System Model
 
-[massFlowrate_NC, PConsumption_NC, COP_NC] = Newer_Cycle(tempOutside,tempInside,deltaT,QNeeded,substance);
+tempInside = 10:5:30;
+[tempInside_NC,tempOutside_NC] = meshgrid(tempInside,tempOutside);
+[QConduction,QVentilation,QPeople,QSum,QNeeded]...
+= HeatCoolLoadsOutsideTemp...
+         (tempOutside_NC,tempInside_NC,0,airMassFlowrate,wallResistance,windowResistance,QHuman);
+[massFlowrate_NC, PConsumption_NC, COP_NC] = Newer_Cycle(tempOutside_NC,tempInside_NC,deltaT,QNeeded,substance);
 
+figure
+hold on
+for i = 1:length(tempInside)
+plot(tempOutside_NC(:,i),PConsumption_NC(:,i),'LineWidth',2)
+end
+title('Power Consumption Plot')
+
+figure
+hold on
+for i = 1:length(tempInside)
+plot(tempOutside_NC(:,i),massFlowrate_NC(:,i),'LineWidth',2)
+end
+title('Mass Flowrate Plot')
+
+figure
+hold on
+for i = 1:length(tempInside)
+plot(tempOutside_NC(:,i),COP_NC(:,i),'LineWidth',2)
+end
+title('COP plot')
 
 %% Plotting and Values for Actual Cycle
 

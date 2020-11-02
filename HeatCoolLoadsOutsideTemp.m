@@ -41,9 +41,9 @@ for i = 1:size(tempOutside,1)
     QPeople(i,:) = (QHuman .* numPeople);
     % Heat transfer from occupants inside the room
 
-    QSum(i,:) = QVentilation+QConduction+QPeople;
+    QSum(i,:) = QVentilation(i,:)+QConduction(i,:)+QPeople(i,:);
     
     
-    QNeeded(i,:) = -QSum;
+    QNeeded(i,:) = -QSum(i,:);
 end
 end
