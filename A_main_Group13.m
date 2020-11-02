@@ -100,7 +100,6 @@ Patm = 101325;
 QHuman = 100;
 substance = 'R410a';
 tempOutside = linspace(min(tempC),max(tempC),100);
-tempInsideDelta = 0;
 
 deltaT = 2;
 TLow = min(tempC)-deltaT;
