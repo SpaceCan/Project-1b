@@ -197,7 +197,7 @@ ylabel('Pressure   (kPa)')
 
 %% Plotting and Values for Actual Cycle
 
-[T1,s1,P1,h1] = Actual_Cycle(283.15,293.15,'R410a');
+[T1,s1,P1,h1] = Actual_Cycle(10, 20, 2, 'R410a');
 figure
 plot(s1,T1)
 
