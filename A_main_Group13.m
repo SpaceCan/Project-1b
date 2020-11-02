@@ -111,7 +111,7 @@ PHigh = CoolProp.PropsSI('P','T',THigh+273.15,'Q',0,substance);
     = HeatCoolLoadsOutsideTemp(tempOutside,0,airMassFlowrate,wallResistance,windowResistance,QHuman);
 % called 'HeatCoolLoadsOutsideTemp' function to find relevent Q terms
 
-[T_C,s_C,P_C,h_C,QCooling,QHeating,massFlowrate2,PowerHP,COPcooling,COPheating]...
+[T_C,s_C,P_C,h_C,QCooling,QHeating,~,PowerHP,COPcooling,COPheating]...
     = Conventional_Cycle(PLow,PHigh,QNeeded,substance);
 % called 'Coventional_Cycle' function to find mdot for R-410a and power for
 % heat pump
@@ -122,11 +122,11 @@ Qhp(heatMode) = QHeating;
 COP = ones(size(QNeeded)).*COPcooling;
 COP(heatMode) = COPheating;
 
-PowerNeeded = ((QNeeded./Qhp).* PowerHP)./1000;
+PowerNeeded_CC = ((QNeeded./Qhp).* PowerHP)./1000;
 %Plot power usage
 figure
 hold on
-plot(tempOutside,PowerNeeded,'Color', '#e6b800', 'LineWidth', 2,...
+plot(tempOutside,PowerNeeded_CC,'Color', '#e6b800', 'LineWidth', 2,...
     'DisplayName','20')
 title('Power Consumption vs Outside Air Temperature')
 xlabel(sprintf('Outside Air Temperature (\x2103)'))
@@ -193,6 +193,7 @@ ylabel('Pressure   (kPa)')
 
 %% Plotting and Values for Newer System Model
 
+[massFlowrate_NC, PConsumption_NC, COP_NC] = Newer_Cycle(tempOutside,tempInside,deltaT,QNeeded,substance);
 
 
 %% Plotting and Values for Actual Cycle
