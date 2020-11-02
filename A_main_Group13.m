@@ -32,7 +32,7 @@ QHuman = 100;
 tempOutside = linspace(min(tempC),max(tempC),100);
 
 [QConduction,QVentilation,QPeople,QSum,~]...
-    = HeatCoolLoadsOutsideTemp(tempOutside,0,airMassFlowrate,wallResistance,windowResistance,QHuman);
+    = HeatCoolLoadsOutsideTemp(tempOutside,20,0,airMassFlowrate,wallResistance,windowResistance,QHuman);
 figure
 hold on
 plot(tempOutside, QSum./10^3,'LineWidth', 2, 'DisplayName','QSum');
@@ -108,7 +108,7 @@ PLow = CoolProp.PropsSI('P','T',TLow+273.15,'Q',1,substance);
 PHigh = CoolProp.PropsSI('P','T',THigh+273.15,'Q',0,substance);
 
 [QConduction,QVentilation,QPeople,QSum,QNeeded]...
-    = HeatCoolLoadsOutsideTemp(tempOutside,0,airMassFlowrate,wallResistance,windowResistance,QHuman);
+    = HeatCoolLoadsOutsideTemp(tempOutside,20,0,airMassFlowrate,wallResistance,windowResistance,QHuman);
 % called 'HeatCoolLoadsOutsideTemp' function to find relevent Q terms
 
 [T_C,s_C,P_C,h_C,QCooling,QHeating,~,PowerHP,COPcooling,COPheating]...
@@ -198,7 +198,7 @@ ylabel('Pressure   (kPa)')
 
 %% Plotting and Values for Actual Cycle
 
-[T1,s1,P1,h1] = Actual_Cycle(283.15,293.15,'R410a');
+[T1,s1,P1,h1] = Actual_Cycle(10, 20, 2, 'R410a');
 figure
 plot(s1,T1)
 
