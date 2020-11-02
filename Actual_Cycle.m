@@ -1,4 +1,13 @@
-function [T,s,P,h] = Actual_Cycle(T1,T4,substance)
+function [T,s,P,h] = Actual_Cycle(tempOutside,tempInside,substance)
+
+if tempOutside < tempInside
+    T1 = tempOutside - deltaT + 273.15;
+    T3 = tempInside + deltaT + 273.15;
+else
+    T3 = tempOutside - deltaT + 273.15;
+    T1 = tempInside + deltaT + 273.15;
+end
+
 Q1 = 1;
 Q4 = 0;
 cond_eff = 0.75;
@@ -41,6 +50,12 @@ T3_3b = linspace(T3,T3b,100);
 for i = 1:length(T3_3b)
     s3_3b(i) = CoolProp.PropsSI('S','T',T3_3b(i),'P',P3,substance);
 end
+
+q_L = h1-h4;
+q_H = h2-h3;
+w = h2-h1;
+
+COP = 
 
 T = [T1,T2,T3_3b,T4,T5,T6,T1];
 s = [s1,s2,s3_3b,s4,s5,s6,s1];

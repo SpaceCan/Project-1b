@@ -39,12 +39,6 @@ s4 = CoolProp.PropsSI('S', 'P', P4, 'H', h4, substance);
 q_h = (h2 - h3);
 q_l = (h1 - h4);
 w = (h2 - h1);
-%         switch type
-%             case 'refrigeration'
-%                 cop(i,j) = q_l/w;
-%             case 'heat pump'
-%                 cop(i,j) = q_h/w;
-%         end
 
 T = [T1,T2a,T2b,T3,T4,T1];
 s = [s1,s2a,s2b,s3,s4,s1];
