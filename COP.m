@@ -1,5 +1,5 @@
 function [cop] = COP(T_H,T_L,deltaT,substance,type)
-%Finds COP for the vapour compression cycle given matrices T_H and T_L
+%Finds COP for the ideal vapour compression cycle given matrices T_H and T_L
 
 Q1 = 0;
 Q2 = 1;

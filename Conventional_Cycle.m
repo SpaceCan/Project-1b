@@ -1,9 +1,8 @@
-function [T,s,P,h,QCooling,QHeating,massFlowrateSubstance,PowerHP,COPcooling,COPheating] = Conventional_Cycle(P1,P3,QNeeded,tempInside,substance,file)
+function [T,s,P,h,QCooling,QHeating,massFlowrateSubstance,PowerHP,COPcooling,COPheating]...
+    = Conventional_Cycle(P1,P3,QNeeded,substance)
 
-load(file, 'tempC', 'timestamp')
 addpath('..\Project-1b\ThermoTablesCoolProp_v6_1_0')
 
-tempOutside = tempC;
 Q1 = 1;
 Q3 = 0;
 % State 1
@@ -53,15 +52,14 @@ h = [h1_2,h3,h4,h1]./(10^3);
 QCooling = min(QNeeded);
 QHeating = max(QNeeded);
 
-massFlowrateCooling = (h1-h4)/QCooling;
-massFlowrateHeating = (h2a-h3)/QHeating;
+massFlowrateCooling = abs((h1-h4)/QCooling);
+massFlowrateHeating = abs((h2a-h3)/QHeating);
 
 if massFlowrateHeating > massFlowrateCooling
     massFlowrateSubstance = massFlowrateHeating;
-elseif massFlowrateHeating < massFlowrateCooling
+else
     massFlowrateSubstance = massFlowrateCooling;
 end
-
 PowerHP = (massFlowrateSubstance*(h2a-h1))./1000;
 COPcooling = (h2a-h3)/(h2a-h1);
 COPheating = (h1-h4)/(h2a-h1);
