@@ -32,7 +32,7 @@ QHuman = 100;
 tempOutside = linspace(min(tempC),max(tempC),100);
 
 [QConduction,QVentilation,QPeople,QSum,~]...
-    = HeatCoolLoadsOutsideTemp(tempOutside,airMassFlowrate,wallResistance,windowResistance,QHuman);
+    = HeatCoolLoadsOutsideTemp(tempOutside,0,airMassFlowrate,wallResistance,windowResistance,QHuman);
 figure
 hold on
 plot(tempOutside, QSum./10^3,'LineWidth', 2, 'DisplayName','QSum');
