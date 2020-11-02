@@ -1,6 +1,6 @@
 function [QConduction,QVentilation,QPeople,QSum,QNeeded]...
     = HeatCoolLoadsOutsideTemp...
-         (tempOutside,tempInside,massFlowrate,wallResistance,windowResistance,QHuman)
+         (tempOutside,tempInsideDelta,airMassFlowrate,wallResistance,windowResistance,QHuman)
 %Calculates Heat transfer values over a specified temperature range
 
 addpath('..\Project-1b\ThermoTablesCoolProp_v6_1_0')
@@ -18,28 +18,22 @@ Patm = 101325;
 hAir_in = zeros(size(tempOutside));
 hAir_out = zeros(size(tempOutside));
 numPeople = 45;
-tempInside = ones(size(tempOutside)) * tempInside;
+tempInside = tempOutside;
+
 
 for i = 1:length(tempOutside)
-%     if hour(time(i)) >= 10 && hour(time(i)) <= 14
-%         tempInside(i) = 20;
-%     else
-%         tempInside(i) = min(max(tempOutside(i), 10),24);
-%     end
+    tempInside(i) = min(max(tempOutside(i),20-tempInsideDelta),20+tempInsideDelta);
+    
     hAir_in(i) = CoolProp.PropsSI('H','P',Patm,'T',tempOutside(i)+273.15,substance);
     hAir_out(i) = CoolProp.PropsSI('H','P',Patm,'T',tempInside(i)+273.15,substance);
 end
 
-% heatMode = tempOutside > tempInside;
-% hAir_inTEMP = hAir_in;
-% hAir_in(heatMode) = hAir_out(heatMode);
-% hAir_out(heatMode) = hAir_inTEMP(heatMode);
 
 QConduction = -((wallArea *(-(tempOutside - tempInside)))/(wallResistance))...
 - ((windowArea *(-(tempOutside - tempInside)))/(windowResistance));
 % Heat transfer lost through the walls/windows
 
-QVentilation = massFlowrate*(hAir_in - hAir_out);
+QVentilation = airMassFlowrate*(hAir_in - hAir_out);
 % Heat transfer from change in temperature of outside and inside air
 
 QPeople = (QHuman .* numPeople);

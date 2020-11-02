@@ -117,6 +117,7 @@ Patm = 101325;
 QHuman = 100;
 substance = 'R410a';
 tempOutside = linspace(min(tempC),max(tempC),100);
+tempInsideDelta = 0;
 
 deltaT = 2;
 TLow = min(tempC)-deltaT;
@@ -124,19 +125,8 @@ THigh = max(tempC)+deltaT;
 PLow = CoolProp.PropsSI('P','T',TLow+273.15,'Q',1,substance);
 PHigh = CoolProp.PropsSI('P','T',THigh+273.15,'Q',0,substance);
 
-%Plotting COP
-
-
-
-
-
-
-
-
-
-
 [QConduction,QVentilation,QPeople,QSum,QNeeded]...
-    = HeatCoolLoadsOutsideTemp(tempOutside,tempInside,airMassFlowrate,wallResistance,windowResistance,QHuman);
+    = HeatCoolLoadsOutsideTemp(tempOutside,0,airMassFlowrate,wallResistance,windowResistance,QHuman);
 % called 'HeatCoolLoadsOutsideTemp' function to find relevent Q terms
 
 [T_C,s_C,P_C,h_C,QCooling,QHeating,massFlowrate2,PowerHP,COPcooling,COPheating]...
@@ -149,6 +139,34 @@ Qhp = ones(size(QNeeded)).*QCooling;
 Qhp(heatMode) = QHeating;
 COP = ones(size(QNeeded)).*COPcooling;
 COP(heatMode) = COPheating;
+
+PowerNeeded = ((QNeeded./Qhp).* PowerHP)./1000;
+%Plot power usage
+figure
+hold on
+plot(tempOutside,PowerNeeded,'Color', '#e6b800', 'LineWidth', 2,...
+    'DisplayName','20')
+title('Power Consumption vs Outside Air Temperature')
+xlabel(sprintf('Outside Air Temperature (\x2103)'))
+ylabel('Power Consumption    (kW)')
+lgd = legend('Location','SouthEast');
+title(lgd,'Inside Temperature')
+
+%Plot Power Savings
+figure
+hold on
+for tempInsideDelta = 1:5
+    [PowerDelta] = ConventionalCyclePowerSavings...
+        (tempOutside,tempInsideDelta,airMassFlowrate,wallResistance,windowResistance,QHuman,PLow,PHigh,substance,PowerNeeded);
+    
+    plot(tempOutside,PowerDelta,'LineWidth', 2,'DisplayName',...
+        sprintf('%d-%d',20-tempInsideDelta,20+tempInsideDelta))
+end
+title('Power Savings vs Outside Air Temperature')
+xlabel(sprintf('Outside Air Temperature (\x2103)'))
+ylabel('Power Savings (kW)')
+lgd = legend('Location','SouthEast');
+title(lgd,'Inside Temperature')
 
 
 % P-v vapor dome
@@ -171,19 +189,6 @@ for i=1:length(T)
 end
 %converting the vapour dome temperature to celcius
 T = T-273.15;
-
-PowerNeeded = ((QNeeded./Qhp).* PowerHP)./1000;
-%Plot power usage
-figure
-hold on
-plot(tempOutside,PowerNeeded,'Color', '#e6b800', 'LineWidth', 2,...
-'DisplayName','20')
-title('Power Consumption vs Outside Air Temperature')
-xlabel(sprintf('Outside Air Temperature (\x2103)'))
-ylabel('Power Consumption    (kW)')
-lgd = legend('Location','SouthEast');
-title(lgd,'Inside Temperature')
-
 
 %Plot T-s diagram
 figure
@@ -219,5 +224,4 @@ plot(h1,P1)
 
 
 %% Plotting and Values for Financial Assessment
-
 

@@ -57,7 +57,7 @@ massFlowrateHeating = abs((h2a-h3)/QHeating);
 
 if massFlowrateHeating > massFlowrateCooling
     massFlowrateSubstance = massFlowrateHeating;
-elseif massFlowrateHeating < massFlowrateCooling
+else
     massFlowrateSubstance = massFlowrateCooling;
 end
 PowerHP = (massFlowrateSubstance*(h2a-h1))./1000;
