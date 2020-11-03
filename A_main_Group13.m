@@ -12,18 +12,18 @@ figure
 wPlot = plot(time(1:192),tempC(1:192));
 wPlot.LineWidth = 2;
 wPlot.Color = '#f54538';
-title('Temperature Variation for the first week of 2019')
-ylabel(sprintf('Temperature (\x2103)'))
+title('Temperature Variation for the first week of 2019','FontSize',14)
+ylabel(sprintf('Temperature (\x2103)'),'FontSize',12)
 
 figure
 yPlot = plot(time,tempC);
 yPlot.LineWidth = 2;
 yPlot.Color = '#16f55d';
-title('Temperature Variation for all of 2019')
-ylabel(sprintf('Temperature (\x2103)'))
+title('Temperature Variation for all of 2019','FontSize',14)
+ylabel(sprintf('Temperature (\x2103)'),'FontSize',12)
 
 %% Heating and Cooling loads Plots
-% Contour plot of heating and cooling loads vs. Inside and outside
+% plot of heating and cooling loads vs. outside temp
 % temperature
 wallResistance = 5.205;
 windowResistance = 0.1905;
@@ -35,10 +35,10 @@ tempOutside = linspace(min(tempC),max(tempC),100);
     = HeatCoolLoadsOutsideTemp(tempOutside,20,0,airMassFlowrate,wallResistance,windowResistance,QHuman);
 figure
 hold on
-plot(tempOutside, QSum./10^3,'LineWidth', 2, 'DisplayName','QSum');
-plot(tempOutside, QConduction./10^3,'LineWidth', 2, 'DisplayName','QConduction');
-plot(tempOutside, QVentilation./10^3,'LineWidth', 2, 'DisplayName','QVentilation');
-plot(tempOutside, QPeople.*ones(size(QSum))./10^3,'LineWidth', 2, 'DisplayName','QPeople');
+plot(tempOutside, QSum./10^3,'LineWidth', 2, 'DisplayName','Sum of Loads');
+plot(tempOutside, QConduction./10^3,'LineWidth', 2, 'DisplayName','Conduction through walls');
+plot(tempOutside, QVentilation./10^3,'LineWidth', 2, 'DisplayName','Ventilation');
+plot(tempOutside, QPeople.*ones(size(QSum))./10^3,'LineWidth', 2, 'DisplayName','Human Body Heat');
 title('Heating & Cooling Loads vs Outside Air Temperature')
 xlabel(sprintf('Outside Air Temperature (\x2103)'))
 ylabel('Heat Transfer (kW)')
@@ -87,6 +87,10 @@ ylabel(sprintf('COP'))
 xlabel(sprintf('Outside Air Temperature (\x2103)'))
 lgd = legend('Ammonia','R-410a','R407C','Location','NorthWest');
 title(lgd, 'Refrigerant')
+
+
+clear HP_COP_R717 AC_COP_R717 HP_COP_R410a AC_COP_R410a HP_COP_R407C AC_COP_R407C
+clear deltaT
 
 %% Plotting and Values for Conventional System Model
 
@@ -282,6 +286,20 @@ c.Label.String = 'COP';
 
 %% Plotting and Values for Financial Assessment
 
+[~,~,~,~,QNeeded,tempInside,time]...
+    = HeatCoolLoads(airMassFlowrate,wallResistance,windowResistance,QHuman,file);
+
+[massFlowrate, PConsumption, COP_Finance]...
+    = Newer_Cycle(tempC,tempInside,deltaT,QNeeded,substance);
+
+powerCostHP = 0.1 * abs((QNeeded/1000)*3600)./COP_Finance;
+powerCostGas = 14 * abs((QNeeded/1000)*3600) * 0.0034095106405145;
+figure
+hold on
+plot(time,powerCostGas, 'LineWidth', 0.5,'DisplayName', 'Gas hourly price')
+plot(time,powerCostHP, 'LineWidth', 0.5, 'DisplayName', 'Heat Pump hourly price')
+ylabel('Cost per hour($)')
+legend
 
 
-
+sprintf('%d dollars saved', sum(powerCostGas-powerCostHP))

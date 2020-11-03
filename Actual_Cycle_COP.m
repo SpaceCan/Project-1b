@@ -1,5 +1,9 @@
 function [COP] = Actual_Cycle_COP(tempOutside,tempInside,deltaT,QNeeded,substance)
 
+if length(tempInside) == 1
+   tempInside = tempInside .* ones(size(tempOutside));
+end
+
 heatMode = tempOutside < tempInside;
 T1 = tempInside + deltaT + 273.15;
 T1(heatMode) = tempOutside(heatMode) - deltaT + 273.15;

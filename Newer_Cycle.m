@@ -4,6 +4,10 @@ function [massFlowrate, PConsumption, COP] = Newer_Cycle(tempOutside,tempInside,
 Q1 = 1;
 Q2 = 0;
 
+if length(tempInside) == 1
+   tempInside = tempInside .* ones(size(tempOutside));
+end
+
 %Calculating T1 and T3
 heatMode = tempOutside < tempInside;
 T1 = tempInside + deltaT + 273.15;
