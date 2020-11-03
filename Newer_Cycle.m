@@ -42,10 +42,10 @@ for i = 1:size(tempOutside,1)
         
         if QNeeded(i,k) < 0
             massFlowrate(i,k) = abs(QNeeded(i,k)./q_l);
-            COP(i,k) = min(abs(q_l/w),500);
+            COP(i,k) = min(abs(q_l/w),150);
         else
             massFlowrate(i,k) = abs(QNeeded(i,k)./q_h);
-            COP(i,k) = min(abs(q_h/w),500);
+            COP(i,k) = min(abs(q_h/w),150);
         end
         PConsumption(i,k) = massFlowrate(i,k).*w;
     end
