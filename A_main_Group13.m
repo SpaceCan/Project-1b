@@ -206,21 +206,36 @@ hold on
 for i = 1:length(tempInside)
 plot(tempOutside_NC(:,i),PConsumption_NC(:,i),'LineWidth',2)
 end
-title('Power Consumption Plot')
+title('Power Consumption','FontSize',14)
+xlabel('Outside Air Temperature ( ^{o}C )','FontSize',13)
+ylabel('Power Consumed  ( kW )','FontSize',13)
+legend('Inside Temperature = 10 ^{o}C', 'Inside Temperature = 15 ^{o}C',...
+    'Inside Temperature = 20 ^{o}C', 'Inside Temperature = 25 ^{o}C',...
+    'Inside Temperature = 30 ^{o}C','Location','north')
 
 figure
 hold on
 for i = 1:length(tempInside)
 plot(tempOutside_NC(:,i),massFlowrate_NC(:,i),'LineWidth',2)
 end
-title('Mass Flowrate Plot')
+title('Mass Flowrate','FontSize',14)
+xlabel('Outside Air Temperature ( ^{o}C )','FontSize',13)
+ylabel('Mass Flowrate  ( kg/s )','FontSize',13)
+legend('Inside Temperature = 10 ^{o}C', 'Inside Temperature = 15 ^{o}C',...
+    'Inside Temperature = 20 ^{o}C', 'Inside Temperature = 25 ^{o}C',...
+    'Inside Temperature = 30 ^{o}C','Location','north')
 
 figure
 hold on
 for i = 1:length(tempInside)
 plot(tempOutside_NC(:,i),COP_NC(:,i),'LineWidth',2)
 end
-title('COP plot')
+title('COP','FontSize',14)
+xlabel('Outside Air Temperature ( ^{o}C )','FontSize',13)
+ylabel('Coefficient of Performance','FontSize',13)
+legend('Inside Temperature = 10 ^{o}C', 'Inside Temperature = 15 ^{o}C',...
+    'Inside Temperature = 20 ^{o}C', 'Inside Temperature = 25 ^{o}C',...
+    'Inside Temperature = 30 ^{o}C','Location','northwest')
 
 %% Plotting and Values for Actual Cycle
 [T_act,s_act,P_act,h_act] = Actual_Cycle(-10, 20, 2, 'R410a');
