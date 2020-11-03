@@ -119,7 +119,7 @@ PHigh = CoolProp.PropsSI('P','T',THigh+273.15,'Q',0,substance);
 heatMode = QNeeded > 0;
 Qhp = ones(size(QNeeded)).*QCooling;
 Qhp(heatMode) = QHeating;
-COP = ones(size(QNeeded)).*COPcooling;
+COP= ones(size(QNeeded)).*COPcooling;
 COP(heatMode) = COPheating;
 
 PowerNeeded_CC = ((QNeeded./Qhp).* PowerHP)./1000;
@@ -198,6 +198,7 @@ tempInside = 10:5:30;
 [QConduction,QVentilation,QPeople,QSum,QNeeded]...
 = HeatCoolLoadsOutsideTemp...
          (tempOutside_NC,tempInside_NC,0,airMassFlowrate,wallResistance,windowResistance,QHuman);
+
 [massFlowrate_NC, PConsumption_NC, COP_NC] = Newer_Cycle(tempOutside_NC,tempInside_NC,deltaT,QNeeded,substance);
 
 figure
@@ -222,14 +223,50 @@ end
 title('COP plot')
 
 %% Plotting and Values for Actual Cycle
-
-[T1,s1,P1,h1] = Actual_Cycle(10, 20, 2, 'R410a');
+[T_act,s_act,P_act,h_act] = Actual_Cycle(-10, 20, 2, 'R410a');
 figure
-plot(s1,T1)
+hold on
+plot([sliq,flip(svap)],[T,flip(T)],'Color', '#00ADEF', 'LineWidth', 2)
+plot(s_act,T_act, 'Color', '#fe5f55', 'LineWidth', 1.5)
+yline(-10, '--', 'Label', 'T_L', 'LineWidth', 1.5);
+yline(20, '--', 'Label', 'T_H', 'LineWidth', 1.5);
+title('T-s Diagram for Actual Cycle')
+xlabel('Specific Entropy (kJ/(kg*k))')
+ylabel(sprintf('Temperature (\x2103)'))
 
 figure
-plot(h1,P1)
+hold on
+plot([hliq,flip(hvap)],[P,flip(P)], 'Color', '#00ADEF', 'LineWidth', 2)
+plot(h_act,P_act, 'Color', '#577399', 'LineWidth', 1.5)
+yline(max(P_act), '--', 'Label', 'P_{Max}', 'LineWidth', 1.5);
+yline(min(P_act), '--', 'Label', 'P_{Min}', 'LineWidth', 1.5);
+title('P-h Diagram for Actual Cycle')
+xlabel('Specific Enthalpy   (kJ/kg)')
+ylabel('Pressure   (kPa)')
+
+%Plotting actual cycle COP
+tempInside = linspace(15,25,20);
+tempOutside = linspace(min(tempC),12,20);
+
+[tempInside_Act,tempOutside_Act] = meshgrid(tempInside,tempOutside);
+[~,~,~,~,QNeeded_Act]...
+= HeatCoolLoadsOutsideTemp...
+         (tempOutside_Act,tempInside_Act,0,airMassFlowrate,wallResistance,windowResistance,QHuman);
+
+[COP_Act] = Actual_Cycle_COP(tempOutside_Act,tempInside_Act,deltaT,QNeeded_Act,substance);
+
+figure
+contour(tempOutside_Act, tempInside_Act, COP_Act, min(COP_Act,[],'all'):2:max(COP_Act,[],'all'), 'Fill', 'on', 'LineColor', 'black')
+title(sprintf('Coefficient of Performance vs Temperature for Actual Cycle, \x0394T = 2\x2103'));
+ylabel(sprintf('Inside Temperature (\x2103)'))
+xlabel(sprintf('Outside Temperature (\x2103)'))
+colormap hot
+c=colorbar;
+c.Label.String = 'COP';
 
 
 %% Plotting and Values for Financial Assessment
+
+
+
 

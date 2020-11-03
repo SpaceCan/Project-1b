@@ -1,14 +1,14 @@
-function [COP] = Actual_Cycle_COP(tempOutside,tempInside,QNeededsubstance)
+function [COP] = Actual_Cycle_COP(tempOutside,tempInside,deltaT,QNeeded,substance)
 
 heatMode = tempOutside < tempInside;
 T1 = tempInside + deltaT + 273.15;
-T1(heatMode) = tempOutside - deltaT + 273.15;
+T1(heatMode) = tempOutside(heatMode) - deltaT + 273.15;
 T4 = tempOutside - deltaT + 273.15;
-T4(heatMode) = tempInside + deltaT + 273.15;
+T4(heatMode) = tempInside(heatMode) + deltaT + 273.15;
 
 Q1 = 1;
 Q4 = 0;
-cond_eff = 0.75;
+cond_eff = 0.85;
 for i = 1:size(tempOutside,1)
     for k = 1:size(tempInside,2)
         P4 = CoolProp.PropsSI('P','T',T4(i,k),'Q',Q4,substance);
@@ -45,15 +45,16 @@ for i = 1:size(tempOutside,1)
         T6 = CoolProp.PropsSI('T','P',P6,'H',h6,substance);
         s6 = CoolProp.PropsSI('S','P',P6,'H',h6,substance);
         
-        q_L = h1-h4;
-        q_H = h2-h3;
-        w = h2-h1;
+        q_l = h1-h4;
+        q_h = h3-h4;
+        w = h3-h2;
         
-        if QNeeded(i,k) > 
-        
+        if QNeeded(i,k) < 0
+            COP(i,k) = min(abs(q_l/w),40);
+        else
+            COP(i,k) = min(abs(q_h/w),40);
+        end
     end
 end
-
-COP =
 
 end

@@ -34,11 +34,6 @@ for i = 1:length(tempOutside)
     hAir_out(i) = CoolProp.PropsSI('H','P',Patm,'T',tempInside(i)+273.15,substance);
 end
 
-heatMode = tempOutside > tempInside;
-hAir_inTEMP = hAir_in;
-hAir_in(heatMode) = hAir_out(heatMode);
-hAir_out(heatMode) = hAir_inTEMP(heatMode);
-
 QConduction = -((wallArea *(-(tempOutside - tempInside)))/(wallResistance))...
 - ((windowArea *(-(tempOutside - tempInside)))/(windowResistance));
 % Heat transfer lost through the walls/windows
